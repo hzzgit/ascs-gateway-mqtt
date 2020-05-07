@@ -1,7 +1,7 @@
 package net.fxft.ascsgatewaymqckbserver;
 
 
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.api.SocketApplication;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.MqttClient;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.api.MqttConsumerListener;
@@ -21,7 +21,7 @@ import java.util.Map.Entry;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 @SpringBootApplication
 public class MqttClientApplication implements CommandLineRunner, SocketApplication {
 	private MqttClient nettyClient;
@@ -76,7 +76,7 @@ public class MqttClientApplication implements CommandLineRunner, SocketApplicati
 	private void initCustom(MqttClient client) {
 		Map<String, MqttClientCustomInit> result = SpringBeanUtil.getApplicationContext().getBeansOfType(MqttClientCustomInit.class);
 		for (Entry<String, MqttClientCustomInit> app : result.entrySet()) {
-			NettyLog.info("init custom - " + app.getKey());
+			log.info("init custom - " + app.getKey());
 			app.getValue().init(client);;
 		}
 	}

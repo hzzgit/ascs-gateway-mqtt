@@ -3,7 +3,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.protocol.process;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttTopicSubscription;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.api.TopicService;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.common.BorkerMessage;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.common.RetainMessage;
@@ -17,7 +17,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class TopicProcess {
 	private TopicService topicService;
 	
@@ -34,10 +34,10 @@ public class TopicProcess {
 		String topicName = bMsgInfo.getTopicName();
 		
 		if (msgBytes.length == 0) {
-			NettyLog.debug("save retain remove: {}", topicName);
+			log.debug("save retain remove: {}", topicName);
 			topicService.removeRetainMessage(topicName);
 		} else {
-			NettyLog.debug("save retain: {}", topicName);
+			log.debug("save retain: {}", topicName);
 			RetainMessage retainMessageStore = RetainMessage.builder().sourceClientId(bMsgInfo.getSourceClientId())
 					.sourceMsgId(bMsgInfo.getSourceMsgId()).topicName(topicName).iQosLevel(bMsgInfo.getIQosLevel()).msgBytes(msgBytes)
 					//.borkerMsgId(bMsgInfo.getBorkerMsgId())
@@ -52,7 +52,7 @@ public class TopicProcess {
 	public void removeClientTopic(String clientId, List<String> topicFilters) {
 		topicFilters.forEach(topicFilter -> {
 			topicService.remove(topicFilter, clientId);
-			NettyLog.debug("UNSUBSCRIBE - clientId: {}, topicFilter: {}", clientId, topicFilter);
+			log.debug("UNSUBSCRIBE - clientId: {}, topicFilter: {}", clientId, topicFilter);
 		});
 	}
 	
@@ -76,13 +76,13 @@ public class TopicProcess {
 				SubscribeTopicInfo subscribeStore = new SubscribeTopicInfo(clientId, topicFilter, mqttQoS.value());
 				topicService.put(topicFilter, subscribeStore);
 				mqttQoSList.add(mqttQoS.value());
-				NettyLog.debug("SUBSCRIBE - clientId: {}, topFilter: {}, QoS: {}", clientId, topicFilter,
+				log.debug("SUBSCRIBE - clientId: {}, topFilter: {}, QoS: {}", clientId, topicFilter,
 						mqttQoS.value());
 			});
 			return mqttQoSList;
 			
 		} else {
-			NettyLog.error("error Subscribe");
+			log.error("error Subscribe");
 			return null;
 		}
 	}

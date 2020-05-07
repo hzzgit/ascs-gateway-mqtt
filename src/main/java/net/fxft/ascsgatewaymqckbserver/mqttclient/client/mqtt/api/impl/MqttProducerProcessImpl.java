@@ -3,7 +3,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.api.impl;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.*;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.core.CacheList;
 import net.fxft.ascsgatewaymqckbserver.common.core.CacheListLocalMemory;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.core.BaseClient;
@@ -19,6 +19,7 @@ import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.protocol.ClientPro
  * @Title: basic
  * @Description:
  **/
+@Slf4j
 public class MqttProducerProcessImpl extends ClientProcess implements MqttProducerProcess, MqttProducer {
 	@Setter
 	@NonNull
@@ -52,12 +53,12 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 			return;
 		}
 		if (!channel().isActive()) {
-			NettyLog.debug("channel is close");
+			log.debug("channel is close");
 			return;
 		}
 		saveMessage(sendMqttMessage);
 
-		NettyLog.debug("sendPubishMessage: {}", sendMqttMessage.toString());
+		log.debug("sendPubishMessage: {}", sendMqttMessage.toString());
 		channel().writeAndFlush(ClientProtocolUtil.publishMessage(sendMqttMessage));
 	}
 
@@ -67,7 +68,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 			return;
 		}
 		if ((sendMqttMessage != null) && (sendMqttMessage.getMessageId() > 0)) {
-			NettyLog.debug("saveMessage: {}", sendMqttMessage.getMessageId());
+			log.debug("saveMessage: {}", sendMqttMessage.getMessageId());
 			msgListCache.put(String.valueOf(sendMqttMessage.getMessageId()), sendMqttMessage);
 		}
 	}
@@ -79,7 +80,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 		}
 		
 		if (messageId > 0) {
-			NettyLog.debug("delMessage: {}", messageId);
+			log.debug("delMessage: {}", messageId);
 			msgListCache.remove(String.valueOf(messageId));
 		}
 	}
@@ -103,24 +104,24 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 
 	@Override
 	public void sendPubRel(int messageId) {
-		NettyLog.debug("send Pub-Rel: {}", messageId);
+		log.debug("send Pub-Rel: {}", messageId);
 		channel().writeAndFlush(ClientProtocolUtil.pubRelMessage(messageId, false));
 	}
 
 	@Override
 	public void processPubRec(int messageId) {
-		NettyLog.debug("process Pub-Rec: {}", messageId);
+		log.debug("process Pub-Rec: {}", messageId);
 		changeMessageStatus(messageId, MessageStatus.PUBREC);
 	}
 
 	@Override
 	public void processPubAck(int messageId) {
-		NettyLog.debug("process Pub-Ack: {} ; list size: {}", messageId, msgListCache.size());
+		log.debug("process Pub-Ack: {} ; list size: {}", messageId, msgListCache.size());
 	}
 
 	@Override
 	public void processPubComp(int messageId) {
-		NettyLog.debug("process Pub-Comp: {}", messageId);
+		log.debug("process Pub-Comp: {}", messageId);
 	}
 
 	@Override

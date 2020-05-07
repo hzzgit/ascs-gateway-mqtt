@@ -6,8 +6,8 @@ import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.NettyConstant;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
 import net.fxft.ascsgatewaymqckbserver.common.NettyUtil;
 import net.fxft.ascsgatewaymqckbserver.common.utils.ByteBufUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.MqttSession;
@@ -29,7 +29,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class ProtocolProcess implements InternalRecvice {
 	
 	private MqttSessionService sessionService;
@@ -159,7 +159,7 @@ public class ProtocolProcess implements InternalRecvice {
 		Boolean sessionPresent = sessionService.containsKey(deviceid) && !isCleanSession;
 		writeBackConnect(channel, MqttConnectReturnCode.CONNECTION_ACCEPTED, sessionPresent, false);
 
-		NettyLog.debug("CONNECT - clientId: {}, cleanSession: {}", deviceid, isCleanSession);
+		log.debug("CONNECT - clientId: {}, cleanSession: {}", deviceid, isCleanSession);
 
 		// 如果cleanSession为0, 需要重发同一clientId存储的未完成的QoS1和QoS2的DUP消息
 		if (!isCleanSession) {
@@ -176,7 +176,7 @@ public class ProtocolProcess implements InternalRecvice {
 	public void processDisConnect(Channel channel, MqttMessage msg) {
 		String clientId = NettyUtil.getClientId(channel);
 		boolean isCleanSession = sessionService.isCleanSession(clientId);
-		NettyLog.debug("DISCONNECT - clientId: {}, cleanSession: {}", clientId, isCleanSession);
+		log.debug("DISCONNECT - clientId: {}, cleanSession: {}", clientId, isCleanSession);
 
 		if (isCleanSession) {
 			this.topicProcess.removeByCleanSession(clientId);
@@ -205,12 +205,12 @@ public class ProtocolProcess implements InternalRecvice {
 				MqttQoS mqttQoS = topicSubscription.qualityOfService();
 				List<RetainMessage> retainMessageList = this.topicProcess.searchRetainMessage(topicFilter);
 				if ((retainMessageList != null) && (retainMessageList.size() > 0)) {
-					NettyLog.debug("sendRetainMessage: {}, {}", clientId, topicFilter);
+					log.debug("sendRetainMessage: {}, {}", clientId, topicFilter);
 					this.consumerProcess.sendRetainMessage(channel, retainMessageList, mqttQoS);
 				}
 			});
 		} else {
-			NettyLog.error("error Subscribe");
+			log.error("error Subscribe");
 			channel.close();
 		}
 	}
@@ -249,7 +249,7 @@ public class ProtocolProcess implements InternalRecvice {
 		String topicName = msg.variableHeader().topicName();
 		
 		if (!topicProcess.checkVaildTopic(topicName)) {
-			NettyLog.debug("In Vaild Topic: {}", topicName);
+			log.debug("In Vaild Topic: {}", topicName);
 			return ;
 		}
 		
@@ -259,7 +259,7 @@ public class ProtocolProcess implements InternalRecvice {
 		BorkerMessage bMsgInfo = BorkerMessage.builder().sourceClientId(clientId).sourceMsgId(packetId)
 				.topicName(topicName).iQosLevel(qosLevel.value()).msgBytes(msgBytes).retain(isRetain).build();
 
-		NettyLog.debug("processPublish: {}", bMsgInfo);
+		log.debug("processPublish: {}", bMsgInfo);
 
 		List<SubscribeTopicInfo> subscribeClientList = this.topicProcess.search(bMsgInfo.getTopicName());
 
@@ -297,7 +297,7 @@ public class ProtocolProcess implements InternalRecvice {
 		ProcedureMessage info = this.procedureProcess.processPubRel(channel, messageId);
 
 		if (info != null) {
-			NettyLog.debug("relInfo:" + info);
+			log.debug("relInfo:" + info);
 
 			BorkerMessage bMsgInfo = BorkerMessage.builder().sourceClientId(info.getSourceClientId())
 					.sourceMsgId(info.getSourceMsgId()).topicName(info.getTopicName()).iQosLevel(info.getIQosLevel())
@@ -347,7 +347,7 @@ public class ProtocolProcess implements InternalRecvice {
 	 */
 	@Override
 	public boolean processInternalRecvice(InternalMessage msg) {
-		NettyLog.debug("processInternalRecvice");
+		log.debug("processInternalRecvice");
 		consumerProcess.sendSubscribMessageForInternal(msg);
 		return true;
 	}

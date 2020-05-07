@@ -1,7 +1,7 @@
 package net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.api.impl;
 
 
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.api.MqttAuth;
 
 /**
@@ -9,11 +9,11 @@ import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.api.MqttAuth;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class AuthServiceImpl implements MqttAuth {
 	@Override
 	public boolean checkValid(String deviceId, String username, String password) {
-		NettyLog.debug("AuthServiceImpl");
+		log.debug("AuthServiceImpl");
 		return true;
 	}
 	

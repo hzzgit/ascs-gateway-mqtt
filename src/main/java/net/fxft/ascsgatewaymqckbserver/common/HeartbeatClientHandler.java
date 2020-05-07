@@ -5,13 +5,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ben
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 @ChannelHandler.Sharable
 public class HeartbeatClientHandler extends ChannelInboundHandlerAdapter {
 	//private static final Logger logger = LoggerFactory.getLogger(HeartbeatClientHandler.class);
@@ -21,15 +22,15 @@ public class HeartbeatClientHandler extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
             if (e.state() == IdleState.WRITER_IDLE) {
-            	NettyLog.info("client WRITER_IDLE");
+            	log.info("client WRITER_IDLE");
             } else if (e.state() == IdleState.READER_IDLE) {
             	TranDataProtoUtil.writeAndFlushTranData(ctx, TranDataProtoUtil.getPingInstance());
             	
-            	NettyLog.info("client READER_IDLE");
+            	log.info("client READER_IDLE");
             	return;
             	
             } else if (e.state() == IdleState.ALL_IDLE) {
-            	NettyLog.info("client ALL_IDLE");
+            	log.info("client ALL_IDLE");
             	ctx.close();
             }
         }

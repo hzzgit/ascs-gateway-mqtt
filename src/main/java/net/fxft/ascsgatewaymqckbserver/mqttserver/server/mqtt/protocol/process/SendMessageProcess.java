@@ -4,7 +4,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.protocol.process;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.NettyUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.common.ConsumerMessage;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.protocol.ProtocolUtil;
@@ -16,7 +16,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class SendMessageProcess {
 
 	/**
@@ -25,7 +25,7 @@ public class SendMessageProcess {
 	 * @param info
 	 */
 	public void sendPublishRetryMessage(Channel channel, ConsumerMessage info) {
-		NettyLog.debug("sendPublishRetryMessage: {}", info);
+		log.debug("sendPublishRetryMessage: {}", info);
 		if (info != null) {
 			this.sendPublishMessage(channel, info.getTopic(), info.isDup(), info.getMqttQoS(), info.isRetain(),
 					info.getMessageId(), info.getMessageBytes());
@@ -44,7 +44,7 @@ public class SendMessageProcess {
 	 */
 	public void sendPublishMessage(Channel channel, String topicName, boolean isDup, int iQoS, boolean isRetain,
 			int messageId, byte[] bytes) {
-		NettyLog.debug("sendPublishMessage: msgId- {}", messageId);
+		log.debug("sendPublishMessage: msgId- {}", messageId);
 		channel.writeAndFlush(ProtocolUtil.publishMessage(topicName, isDup, iQoS, isRetain, messageId, bytes));
 	}
 
@@ -54,7 +54,7 @@ public class SendMessageProcess {
 	 * @param publishMessage
 	 */
 	public void sendPublishMessage(Channel channel, MqttPublishMessage publishMessage) {
-		NettyLog.debug("sendPublishMessage");
+		log.debug("sendPublishMessage");
 		channel.writeAndFlush(publishMessage);
 	}
 
@@ -65,7 +65,7 @@ public class SendMessageProcess {
 	 * @param msgId
 	 */
 	public void sendPubCompMessage(Channel channel, int msgId) {
-		NettyLog.debug("sendPubCompMessage");
+		log.debug("sendPubCompMessage");
 		channel.writeAndFlush(ProtocolUtil.pubCompMessage(msgId));
 	}
 
@@ -76,7 +76,7 @@ public class SendMessageProcess {
 	 * @param messageId
 	 */
 	public void sendPubAckMessage(Channel channel, int messageId) {
-		NettyLog.debug("sendPubAckMessage");
+		log.debug("sendPubAckMessage");
 		channel.writeAndFlush(ProtocolUtil.pubAckMessage(messageId));
 	}
 
@@ -87,7 +87,7 @@ public class SendMessageProcess {
 	 * @param messageId
 	 */
 	public void sendPubRecMessage(Channel channel, int messageId) {
-		NettyLog.debug("sendPubRecMessage");
+		log.debug("sendPubRecMessage");
 		channel.writeAndFlush(ProtocolUtil.pubRecMessage(messageId));
 	}
 
@@ -99,7 +99,7 @@ public class SendMessageProcess {
 	 */
 
 	public void sendBackConnect(Channel channel, MqttConnectReturnCode code, boolean bSessionPresent) {
-		NettyLog.debug("sendBackConnect");
+		log.debug("sendBackConnect");
 		channel.writeAndFlush(ProtocolUtil.connAckMessage(code, bSessionPresent));
 	}
 	
@@ -108,7 +108,7 @@ public class SendMessageProcess {
 	 * @param channel
 	 */
 	public void sendPingRespMessage(Channel channel) {
-		NettyLog.debug("sendPingRespMessage - clientId: {}", NettyUtil.getClientId(channel));
+		log.debug("sendPingRespMessage - clientId: {}", NettyUtil.getClientId(channel));
 		channel.writeAndFlush(ProtocolUtil.pingRespMessage());
 	}
 
@@ -119,7 +119,7 @@ public class SendMessageProcess {
 	 * @param mqttQoSList
 	 */
 	public void sendSubAckMessage(Channel channel, int messageId, List<Integer> mqttQoSList) {
-		NettyLog.debug("sendSubAckMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
+		log.debug("sendSubAckMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
 		channel.writeAndFlush(ProtocolUtil.subAckMessage(messageId, mqttQoSList));
 	}
 	
@@ -130,7 +130,7 @@ public class SendMessageProcess {
 	 * @param bDup
 	 */
 	public void sendPubRelMessage(Channel channel, int messageId, boolean bDup) {
-		NettyLog.debug("sendPubRelMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
+		log.debug("sendPubRelMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
 		channel.writeAndFlush(ProtocolUtil.pubRelMessage(messageId, bDup));
 	}
 	
@@ -140,7 +140,7 @@ public class SendMessageProcess {
 	 * @param messageId
 	 */
 	public void sendUnSubAckMessage(Channel channel, int messageId) {
-		NettyLog.debug("sendUnSubAckMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
+		log.debug("sendUnSubAckMessage - clientId: {}, msgID: {}", NettyUtil.getClientId(channel), messageId);
 		channel.writeAndFlush(ProtocolUtil.unsubAckMessage(messageId));
 	}
 }

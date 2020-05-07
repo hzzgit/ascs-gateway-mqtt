@@ -4,7 +4,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.exception.LoginException;
 import net.fxft.ascsgatewaymqckbserver.common.utils.ByteBufUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.core.ClientProcess;
@@ -19,7 +19,7 @@ import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.common.MessageStat
  * @Description:
  * B-borker; S-Subribler; P-Publisher
  **/
-
+@Slf4j
 public class ClientProtocolProcess {
 	private final ClientProcess clientProcess;
 	private final MqttConsumerProcess consumerProcess;
@@ -188,7 +188,7 @@ public class ClientProtocolProcess {
 		} else {
 			MqttMessageIdVariableHeader o = (MqttMessageIdVariableHeader) mqttMessage.variableHeader();
 			messageId = o.messageId();
-			NettyLog.error("not UnsubAckMessage:{}", messageId);
+			log.error("not UnsubAckMessage:{}", messageId);
 		}
 		this.consumerProcess.processUnSubBack(messageId);
 	}

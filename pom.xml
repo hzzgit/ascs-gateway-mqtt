@@ -10,8 +10,8 @@
     </parent>
     <groupId>net.fxft</groupId>
     <artifactId>ascs-gateway-mqtt</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>ascs-gateway-mqckbserver</name>
+    <version>0.0.2-SNAPSHOT</version>
+    <name>ascs-gateway-mqtt</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -119,6 +119,7 @@
                         </include>
 
                     </includes>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

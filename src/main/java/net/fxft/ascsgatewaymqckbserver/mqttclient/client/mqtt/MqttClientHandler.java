@@ -4,7 +4,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.mqtt.*;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.protocol.ClientProtocolProcess;
 
 /**
@@ -12,7 +12,7 @@ import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.protocol.ClientPro
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class MqttClientHandler extends SimpleChannelInboundHandler<Object> {
 	private ClientProtocolProcess clientProtocolProcess;
 
@@ -24,7 +24,7 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<Object> {
 	protected void channelRead0(ChannelHandlerContext ctx, Object msgx) throws Exception {
 		if (msgx == null) {return ;}
 		MqttMessage msg = (MqttMessage) msgx;
-		NettyLog.debug("read: {}", msg.fixedHeader().messageType());
+		log.debug("read: {}", msg.fixedHeader().messageType());
 		MqttFixedHeader mqttFixedHeader = msg.fixedHeader();
 		switch (mqttFixedHeader.messageType()) {
 		case CONNACK:

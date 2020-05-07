@@ -18,6 +18,7 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.*;
 import net.fxft.ascsgatewaymqckbserver.common.api.BaseChannel;
 import net.fxft.ascsgatewaymqckbserver.common.exception.SocketRuntimeException;
@@ -29,7 +30,7 @@ import javax.net.ssl.SSLEngine;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 @SuppressWarnings("deprecation")
 public abstract class BaseServer extends BaseChannel {
 	private EventLoopGroup bossGroup;
@@ -65,7 +66,7 @@ public abstract class BaseServer extends BaseChannel {
 	private void initGroup() {
 		System.out.println("workerCount:" + workerCount);
 		if (SocketModel.BLOCK.equals(socketModel)) {
-			NettyLog.info("block socket");
+			log.info("block socket");
 			bossGroup = new OioEventLoopGroup(workerCount);
 			workerGroup = new OioEventLoopGroup(workerCount);
 		} else {
@@ -116,7 +117,7 @@ public abstract class BaseServer extends BaseChannel {
 				        ch.pipeline().addFirst(NettyConstant.HANDLER_NAME_SSL, new SslHandler(sslEngine));
 					}
 					if (self().isCheckHeartbeat()) {
-						NettyLog.info("checkHeartBeat.....");
+						log.info("checkHeartBeat.....");
 						ch.pipeline().addLast(
 								new IdleStateHandler(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds));
 						ch.pipeline().addLast(NettyConstant.HANDLER_NAME_HEARTCHECK, new HeartbeatServerHandler());
@@ -134,14 +135,14 @@ public abstract class BaseServer extends BaseChannel {
 			future.sync();
 
 		} catch (Exception ex) {
-			NettyLog.error("Netty start error:", ex);
+			log.error("Netty start error:", ex);
 			throw new SocketRuntimeException(ex);
 		} finally {
 			if (channel != null && channel.isActive()) {
-				NettyLog.info("Netty net.fxft.ascsgatewaymqckbserver.mqttserver.server listening " + this.getHost() + " on port " + this.getPort()
+				log.info("Netty net.fxft.ascsgatewaymqckbserver.mqttserver.server listening " + this.getHost() + " on port " + this.getPort()
 						+ " and ready for connections...");
 			} else {
-				NettyLog.error("Netty net.fxft.ascsgatewaymqckbserver.mqttserver.server start up Error!");
+				log.error("Netty net.fxft.ascsgatewaymqckbserver.mqttserver.server start up Error!");
 			}
 		}
 	}
@@ -151,7 +152,7 @@ public abstract class BaseServer extends BaseChannel {
 
 	@Override
 	public void shutdown() {
-		NettyLog.info("Shutdown Netty Server...");
+		log.info("Shutdown Netty Server...");
 		if (channel != null) {
 			channel.close().syncUninterruptibly();
 		}
@@ -161,7 +162,7 @@ public abstract class BaseServer extends BaseChannel {
 		if (bossGroup != null) {
 			bossGroup.shutdownGracefully().syncUninterruptibly();
 		}
-		NettyLog.info("Shutdown Netty Server Success!");
+		log.info("Shutdown Netty Server Success!");
 	}
 
 	protected void broadcastMessage(Object msg) {

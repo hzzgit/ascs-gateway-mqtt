@@ -12,6 +12,7 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.*;
 import net.fxft.ascsgatewaymqckbserver.common.api.BaseChannel;
 import net.fxft.ascsgatewaymqckbserver.common.exception.LoginException;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 @SuppressWarnings("deprecation")
 public abstract class BaseClient extends BaseChannel implements ClientProcess {
 	private Semaphore semConnect = new Semaphore(0);
@@ -87,7 +88,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 		bootstrap.option(ChannelOption.TCP_NODELAY, tcpNoDelay);
 		bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeOutMillis);
 		if (SocketModel.BLOCK.equals(socketModel)) {
-			NettyLog.info("block socket");
+			log.info("block socket");
 			bootstrap.group(group).channel(OioSocketChannel.class);
 		} else {
 			bootstrap.group(group).channel(NioSocketChannel.class);
@@ -106,14 +107,14 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 				}
 
 				if (self().isCheckHeartbeat()) {
-					NettyLog.info("checkHeartBeat.....");
+					log.info("checkHeartBeat.....");
 					ch.pipeline().addLast(
 							new IdleStateHandler(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds));
 					ch.pipeline().addLast(NettyConstant.HANDLER_NAME_HEARTCHECK, new HeartbeatClientHandler());
 				}
 			}
 		});
-		NettyLog.debug("connect start");
+		log.debug("connect start");
 		doConnect();
 
 		if (checkConnectFlag && checkConnectSeconds > 1) {
@@ -132,7 +133,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 
 	public void reConnect() {
 		if (!isOpen() || !isActive()) {
-			NettyLog.info("reConnect");
+			log.info("reConnect");
 			doConnect();
 		}
 	}
@@ -146,7 +147,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 	public boolean checkConnectFlag(boolean bTimeOut, long timeOutMills) {
 
 		if ((loginFlag == 0) && bTimeOut) {
-			NettyLog.error("login timeout: " + timeOutMills);
+			log.error("login timeout: " + timeOutMills);
 
 			if ((channel != null) && channel.isActive()) {
 				channel.close();
@@ -181,7 +182,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 			}
 
 		} catch (Exception ex) {
-			NettyLog.error("Netty start error:", ex);
+			log.error("Netty start error:", ex);
 			throw new SocketRuntimeException(ex);
 		} finally {
 		}
@@ -189,10 +190,10 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 
 	protected void finishConnectEvent(ChannelFuture ch) {
 		if (ch.isSuccess() && (channel != null) && channel.isActive()) {
-			NettyLog.info("client connect " + channel.remoteAddress());
+			log.info("client connect " + channel.remoteAddress());
 			prepareLogin();
 		} else {
-			NettyLog.info(" client connect failure!");
+			log.info(" client connect failure!");
 		}
 	}
 
@@ -207,18 +208,18 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 			if (this.isActive()) {
 				this.disConnect();
 			}
-			NettyLog.info("Shutdown Netty Client...");
+			log.info("Shutdown Netty Client...");
 			channel.close().syncUninterruptibly();
 			channel = null;
 		}
 		group.shutdownGracefully().syncUninterruptibly();
-		NettyLog.info("Shutdown Netty Client Success!");
+		log.info("Shutdown Netty Client Success!");
 	}
 
 	private void prepareLogin() {
 		loginFlag = 0;
 		if (loginInit()) {
-			NettyLog.debug("login start...");
+			log.debug("login start...");
 		} else {
 			loginFlag = 1;
 		}
@@ -234,7 +235,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 
 	@Override
 	public void loginFinish(boolean bResult, LoginException exception) {
-		NettyLog.debug("login finish");
+		log.debug("login finish");
 		if (bResult) {
 			NettyUtil.setClientId(channel, getClientId());
 			loginFlag = 1;
@@ -244,7 +245,7 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 		} else {
 			loginFlag = 2;
 			if (exception != null) {
-				NettyLog.error("login error", exception);
+				log.error("login error", exception);
 			}
 		}
 	}

@@ -6,7 +6,7 @@ import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.Getter;
 import lombok.Setter;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.NettyUtil;
 import net.fxft.ascsgatewaymqckbserver.common.api.GlobalUniqueId;
 import net.fxft.ascsgatewaymqckbserver.common.api.GlobalUniqueIdImpl;
@@ -26,7 +26,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class ConsumerProcess {
 	private SendMessageProcess sendProcess;
 	private ConsumerDataService consumerData;
@@ -64,18 +64,18 @@ public class ConsumerProcess {
 
 	public void processPubRec(Channel channel, int messageId) {
 		String clientId = NettyUtil.getClientId(channel);
-		NettyLog.debug("PUBREC - clientId: {}, messageId: {}", clientId, messageId);
+		log.debug("PUBREC - clientId: {}, messageId: {}", clientId, messageId);
 	}
 
 	public void processPubComp(Channel channel, int messageId) {
 		String clientId = NettyUtil.getClientId(channel);
-		NettyLog.error("PUBCOMP - clientId: {}, messageId: {}", clientId, messageId);
+		log.error("PUBCOMP - clientId: {}, messageId: {}", clientId, messageId);
 		consumerData.removePublishMessage(clientId, messageId);
 	}
 
 	public void processPubAck(Channel channel, int messageId) {
 		String clientId = NettyUtil.getClientId(channel);
-		NettyLog.debug("PUBACK - clientId: {}, messageId: {}", clientId, messageId);
+		log.debug("PUBACK - clientId: {}, messageId: {}", clientId, messageId);
 		consumerData.removePublishMessage(clientId, messageId);
 	}
 	

@@ -3,7 +3,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.protocol.process;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttQoS;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.NettyUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.api.ProcedureDataService;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.common.BorkerMessage;
@@ -16,7 +16,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class ProcedureProcess {
 	private final SendMessageProcess sendProcess;
 	private ProcedureDataService procedureData;
@@ -46,7 +46,7 @@ public class ProcedureProcess {
 
 	public ProcedureMessage processPubRel(Channel channel, int messageId) {
 		String clientId = NettyUtil.getClientId(channel);
-		NettyLog.debug("PUBREL - clientId: {}, messageId: {}", clientId, messageId);
+		log.debug("PUBREL - clientId: {}, messageId: {}", clientId, messageId);
 		//
 		ProcedureMessage relInfo = procedureData.removePubRelMessage(clientId, messageId);
 		return relInfo;

@@ -6,7 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.NettyUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttserver.server.mqtt.protocol.ProtocolProcess;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class MqttServerHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
 	private ProtocolProcess protocolProcess;
@@ -30,18 +30,18 @@ public class MqttServerHandler extends SimpleChannelInboundHandler<MqttMessage> 
 	protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
 		
 		if (!msg.decoderResult().isSuccess()) {
-			NettyLog.error("error decoder");
+			log.error("error decoder");
 			ctx.close(); 
 			return;
 		}
 		
-		NettyLog.debug("read: " + msg.fixedHeader().messageType());
+		log.debug("read: " + msg.fixedHeader().messageType());
 		
 		if (msg.fixedHeader().messageType() == MqttMessageType.CONNECT) {
 			protocolProcess.processConnect(ctx.channel(), (MqttConnectMessage) msg);
 		} else {
 			if (!NettyUtil.isLogin(ctx.channel())) {
-				NettyLog.info("not login");
+				log.info("not login");
 				return ;
 			}
 		}

@@ -3,13 +3,14 @@ package net.fxft.ascsgatewaymqckbserver.common;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ben
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class TranDataProtoUtil {
 	public interface TranFlag {
 		public static final int PING = 1;
@@ -65,7 +66,7 @@ public class TranDataProtoUtil {
 		try {
 			reqData = JSON.parseObject(str, TranDataProto.class);
 		} catch (Exception ex) {
-			NettyLog.error("error josn: " + str);
+			log.error("error josn: " + str);
 		}
 		return reqData;
 	}

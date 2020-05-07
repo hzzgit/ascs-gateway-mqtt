@@ -3,7 +3,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.api.impl;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.*;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.core.CacheList;
 import net.fxft.ascsgatewaymqckbserver.common.core.CacheListLocalMemory;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.core.BaseClient;
@@ -24,7 +24,7 @@ import java.util.List;
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsumerProcess, MqttConsumer {
 	private MqttConsumerListener listener;
 	@Setter
@@ -47,7 +47,7 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 	}
 
 	public void subscribe(SubscribeMessage info) {
-		NettyLog.debug("subscribe： {} ", info);
+		log.debug("subscribe： {} ", info);
 		subscribe(new SubscribeMessage[] { info });
 	}
 
@@ -55,7 +55,7 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 		if (info != null) {
 			int messageId = messageId().getNextMessageId(this.getClientId());
 			if (!channel().isActive()) {
-				NettyLog.debug("channel is close");
+				log.debug("channel is close");
 				return;
 			}
 			
@@ -80,7 +80,7 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 	public void saveMesage(MessageData recviceMessage) {
 		//if (msgListCache == null) {return;}
 		if ((recviceMessage != null) && (recviceMessage.getMessageId() > 0)) {
-			NettyLog.debug("saveMessage: {}", recviceMessage.getMessageId());
+			log.debug("saveMessage: {}", recviceMessage.getMessageId());
 			msgListCache.put(String.valueOf(recviceMessage.getMessageId()), recviceMessage);
 		}
 	}
@@ -89,14 +89,14 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 	public void delMesage(int messageId) {
 		if (msgListCache == null) {return;}
 		if (messageId > 0) {
-			NettyLog.debug("delMesage: {}", messageId);
+			log.debug("delMesage: {}", messageId);
 			msgListCache.remove(String.valueOf(messageId));
 		}
 	}
 
 	public MessageData changeMessageStatus(int messageId, MessageStatus status) {
 		if (msgListCache == null) {return null;}
-		NettyLog.debug("changeMessageStatus: {}", status.name());
+		log.debug("changeMessageStatus: {}", status.name());
 
 		MessageData msgObj = msgListCache.get(String.valueOf(messageId));
 		if (msgObj != null) {
@@ -115,23 +115,23 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 				listener.receiveMessage(msgObj.getMessageId(), msgObj.getTopic(), decode(msgObj.getPayload()));
 			}
 		}
-		NettyLog.debug("process Pub-rel: messageId - {} ", messageId);
+		log.debug("process Pub-rel: messageId - {} ", messageId);
 
 	}
 
 	@Override
 	public void processSubAck(int messageId) {
-		NettyLog.debug("process Sub-ack: messageId - {} ", messageId);
+		log.debug("process Sub-ack: messageId - {} ", messageId);
 	}
 
 	@Override
 	public void processUnSubBack(int messageId) {
-		NettyLog.debug("process Un-sub-back: messageId - {} ", messageId);
+		log.debug("process Un-sub-back: messageId - {} ", messageId);
 	}
 
 	@Override
 	public void processPublish(MessageData msg) {
-		NettyLog.debug("process Publish: {} ", msg);
+		log.debug("process Publish: {} ", msg);
 
 		if (listener != null) {
 			listener.receiveMessageByAny(msg.getMessageId(), msg.getTopic(), decode(msg.getPayload()));
@@ -144,19 +144,19 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 
 	@Override
 	public void sendPubRecMessage(int messageId) {
-		NettyLog.debug("send Pub-rec: messageId - {} ", messageId);
+		log.debug("send Pub-rec: messageId - {} ", messageId);
 		channel().writeAndFlush(ClientProtocolUtil.pubRecMessage(messageId));
 	}
 
 	@Override
 	public void sendPubAckMessage(int messageId) {
-		NettyLog.debug("send Pub-ack: messageId - {} ", messageId);
+		log.debug("send Pub-ack: messageId - {} ", messageId);
 		channel().writeAndFlush(ClientProtocolUtil.pubAckMessage(messageId));
 	}
 
 	@Override
 	public void sendPubCompMessage(int messageId) {
-		NettyLog.debug("send Pub-comp: messageId - {} ", messageId);
+		log.debug("send Pub-comp: messageId - {} ", messageId);
 		channel().writeAndFlush(ClientProtocolUtil.pubCompMessage(messageId));
 	}
 

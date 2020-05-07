@@ -4,7 +4,7 @@ package net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
-import net.fxft.ascsgatewaymqckbserver.common.NettyLog;
+import lombok.extern.slf4j.Slf4j;
 import net.fxft.ascsgatewaymqckbserver.common.exception.MethodNotSupportException;
 import net.fxft.ascsgatewaymqckbserver.common.utils.StringsUtil;
 import net.fxft.ascsgatewaymqckbserver.mqttclient.client.core.BaseClient;
@@ -23,7 +23,7 @@ import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.protocol.ClientPro
  * @Title: basic
  * @Description:
  **/
-
+@Slf4j
 public class MqttClient extends BaseClient {
 	private MqttConnectOptions info = new MqttConnectOptions();
 	private MqttProducerProcess producerProcess;
@@ -85,7 +85,7 @@ public class MqttClient extends BaseClient {
 
 	@Override
 	protected boolean loginInit() {
-		NettyLog.debug("loginInit: " + info.toString());
+		log.debug("loginInit: " + info.toString());
 		channel.writeAndFlush(ClientProtocolUtil.connectMessage(info));
 		return true;
 	}
@@ -93,7 +93,7 @@ public class MqttClient extends BaseClient {
 	@Override
 	public void disConnect() {
 		if (channel != null) {
-			NettyLog.debug("disConnect: ");
+			log.debug("disConnect: ");
 			channel.writeAndFlush(ClientProtocolUtil.disConnectMessage());
 		}
 	}
