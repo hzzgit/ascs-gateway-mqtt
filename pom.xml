@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>net.fxft</groupId>
-    <artifactId>ascs-gateway-mqckbserver</artifactId>
+    <artifactId>ascs-gateway-mqtt</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ascs-gateway-mqckbserver</name>
     <description>Demo project for Spring Boot</description>
@@ -105,7 +105,7 @@
 
 
     <build>
-        <finalName>ascs-gateway-mqckbserver</finalName>
+        <finalName>ascs-gateway-mqtt</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
