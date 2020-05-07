@@ -33,7 +33,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 		this.msgListCache = msgListCache;
 	}
 
-	private MessageData buildMqttMessage(String topic, String message, int qosValue, boolean isReatain, boolean dup) {
+	private MessageData buildMqttMessage(String topic, byte[] message, int qosValue, boolean isReatain, boolean dup) {
 		int msgId = 0;
 		if (qosValue == MqttQoS.AT_LEAST_ONCE.value()) {
 			msgId = messageId().getNextMessageId(getClientId());
@@ -43,7 +43,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 
 		return MessageData.builder().messageId(msgId).topic(topic).dup(dup).retained(isReatain).qos(qosValue)
 				.status(MessageStatus.PUB)
-				.timestamp(System.currentTimeMillis()).payload(encoded(message))
+				.timestamp(System.currentTimeMillis()).payload(message)
 				.build();
 	}
 
@@ -97,7 +97,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 	}
 
 	@Override
-	public void sendPubishMessage(String topic, String message, int qosValue, boolean isRetain) {
+	public void sendPubishMessage(String topic, byte[] message, int qosValue, boolean isRetain) {
 		sendPubishMessage(buildMqttMessage(topic, message, qosValue, isRetain, false));
 	}
 

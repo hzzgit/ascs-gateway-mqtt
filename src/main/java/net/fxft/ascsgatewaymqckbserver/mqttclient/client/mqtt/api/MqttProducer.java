@@ -25,7 +25,7 @@ public interface MqttProducer extends GlobalUniqueIdSet {
 	 * @param qosValue
 	 * @param isRetain
 	 */
-	void sendPubishMessage(String topic, String message, int qosValue, boolean isRetain);
+	void sendPubishMessage(String topic, byte[] message, int qosValue, boolean isRetain);
 	
 
 }

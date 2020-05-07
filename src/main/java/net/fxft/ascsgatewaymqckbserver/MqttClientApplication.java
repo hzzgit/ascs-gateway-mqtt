@@ -46,7 +46,7 @@
 //			public void process() {
 //				nettyClient.consumer().subscribe("/a", 2);
 //				///
-//				nettyClient.producer().sendPubishMessage("/a", "demo", 2, false);
+//				nettyClient.producer().sendPubishMessage("/a", "demo".getBytes(), 2, false);
 //			}
 //		});
 //
