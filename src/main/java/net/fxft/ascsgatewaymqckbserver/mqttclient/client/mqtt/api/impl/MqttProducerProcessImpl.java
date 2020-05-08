@@ -58,7 +58,7 @@ public class MqttProducerProcessImpl extends ClientProcess implements MqttProduc
 		}
 		saveMessage(sendMqttMessage);
 
-		log.debug("sendPubishMessage: {}", sendMqttMessage.toString());
+		log.debug("sendPubishMessage: {}", sendMqttMessage.getTopic());
 		channel().writeAndFlush(ClientProtocolUtil.publishMessage(sendMqttMessage));
 	}
 

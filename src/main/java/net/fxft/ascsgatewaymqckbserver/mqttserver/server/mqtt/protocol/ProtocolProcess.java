@@ -259,7 +259,7 @@ public class ProtocolProcess implements InternalRecvice {
 		BorkerMessage bMsgInfo = BorkerMessage.builder().sourceClientId(clientId).sourceMsgId(packetId)
 				.topicName(topicName).iQosLevel(qosLevel.value()).msgBytes(msgBytes).retain(isRetain).build();
 
-		log.debug("processPublish: {}", bMsgInfo);
+		log.debug("processPublish: {}", bMsgInfo.getTopicName());
 
 		List<SubscribeTopicInfo> subscribeClientList = this.topicProcess.search(bMsgInfo.getTopicName());
 
@@ -297,7 +297,7 @@ public class ProtocolProcess implements InternalRecvice {
 		ProcedureMessage info = this.procedureProcess.processPubRel(channel, messageId);
 
 		if (info != null) {
-			log.debug("relInfo:" + info);
+			log.debug("relInfo:" + info.getTopicName());
 
 			BorkerMessage bMsgInfo = BorkerMessage.builder().sourceClientId(info.getSourceClientId())
 					.sourceMsgId(info.getSourceMsgId()).topicName(info.getTopicName()).iQosLevel(info.getIQosLevel())

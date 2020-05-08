@@ -131,7 +131,7 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 
 	@Override
 	public void processPublish(MessageData msg) {
-		log.debug("process Publish: {} ", msg);
+		log.debug("process Publish: {} ", msg.getTopic());
 
 		if (listener != null) {
 			listener.receiveMessageByAny(msg.getMessageId(), msg.getTopic(), msg.getPayload());

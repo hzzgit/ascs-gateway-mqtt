@@ -45,7 +45,9 @@ public class MqttServer extends BaseServer {
 		SendMessageProcess sendMessageProcess = getSendMessageProcess();//获取到发送的类
 		MqttSessionService mqttSessionService = getsessionService();//获取到存放连接客户端的类
 		MqttSession session = mqttSessionService.getSession(channelId);
-		sendMessageProcess.sendPublishMessage(session.channel(), publishMessage);
+		if(session!=null) {
+			sendMessageProcess.sendPublishMessage(session.channel(), publishMessage);
+		}
 	}
 
 	public MqttServer( ) {

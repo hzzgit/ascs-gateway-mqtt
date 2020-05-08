@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.fxft</groupId>
     <artifactId>ascs-gateway-mqtt</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0.1-RELEASE</version>
     <name>ascs-gateway-mqtt</name>
     <description>Demo project for Spring Boot</description>
 

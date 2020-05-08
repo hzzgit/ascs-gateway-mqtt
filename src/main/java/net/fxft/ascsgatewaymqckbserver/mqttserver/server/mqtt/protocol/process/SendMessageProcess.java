@@ -25,7 +25,7 @@ public class SendMessageProcess {
 	 * @param info
 	 */
 	public void sendPublishRetryMessage(Channel channel, ConsumerMessage info) {
-		log.debug("sendPublishRetryMessage: {}", info);
+		log.debug("sendPublishRetryMessage: {}", info.getTopic());
 		if (info != null) {
 			this.sendPublishMessage(channel, info.getTopic(), info.isDup(), info.getMqttQoS(), info.isRetain(),
 					info.getMessageId(), info.getMessageBytes());
