@@ -351,4 +351,8 @@ public class ProtocolProcess implements InternalRecvice {
 		consumerProcess.sendSubscribMessageForInternal(msg);
 		return true;
 	}
+
+	public MqttSessionService getSesssionService() {
+		return sessionService;
+	}
 }

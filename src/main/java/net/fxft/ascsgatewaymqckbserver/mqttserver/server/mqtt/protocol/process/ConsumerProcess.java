@@ -33,7 +33,11 @@ public class ConsumerProcess {
 	private MqttSessionService sessionService;
 	
 	private GlobalUniqueId messageIdService;
-	 
+
+	public SendMessageProcess getSendProcess() {
+		return sendProcess;
+	}
+
 	@Setter
     @Getter
 	private InternalSend internalSend;

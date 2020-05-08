@@ -112,7 +112,7 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 
 		if ((msgObj != null) && (listener != null)) {
 			if (msgObj.getQos() == MqttQoS.EXACTLY_ONCE.value()) {
-				listener.receiveMessage(msgObj.getMessageId(), msgObj.getTopic(), decode(msgObj.getPayload()));
+				listener.receiveMessage(msgObj.getMessageId(), msgObj.getTopic(), msgObj.getPayload());
 			}
 		}
 		log.debug("process Pub-rel: messageId - {} ", messageId);
@@ -134,10 +134,10 @@ public class MqttConsumerProcessImpl extends ClientProcess implements MqttConsum
 		log.debug("process Publish: {} ", msg);
 
 		if (listener != null) {
-			listener.receiveMessageByAny(msg.getMessageId(), msg.getTopic(), decode(msg.getPayload()));
+			listener.receiveMessageByAny(msg.getMessageId(), msg.getTopic(), msg.getPayload());
 
 			if (msg.getQos() == MqttQoS.AT_MOST_ONCE.value() || msg.getQos() == MqttQoS.EXACTLY_ONCE.value()) {
-				listener.receiveMessage(msg.getMessageId(), msg.getTopic(), decode(msg.getPayload()));
+				listener.receiveMessage(msg.getMessageId(), msg.getTopic(), msg.getPayload());
 			}
 		}
 	}

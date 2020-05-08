@@ -11,12 +11,12 @@ import net.fxft.ascsgatewaymqckbserver.mqttclient.client.mqtt.api.MqttConsumerLi
 public class DefautMqttConsumerListener implements MqttConsumerListener {
 
 	@Override
-	public void receiveMessage(int msgId, String topic, String msg) {
+	public void receiveMessage(int msgId, String topic, byte[] msg) {
 		// TODO Auto-generated method stub	
 	}
 
 	@Override
-	public void receiveMessageByAny(int msgId, String topic, String msg) {
+	public void receiveMessageByAny(int msgId, String topic, byte[] msg) {
 		// TODO Auto-generated method stub
 	}
 }

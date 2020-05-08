@@ -149,7 +149,7 @@ public class ClientProtocolProcess {
 			this.consumerProcess.saveMesage(recviceMessage);
 		}
 
-		this.consumerProcess.processPublish(recviceMessage);
+		this.consumerProcess.processPublish(recviceMessage);//这边就是接收到服务端的消息进行的处理
 
 		switch (qosLevel) {
 		case AT_MOST_ONCE:

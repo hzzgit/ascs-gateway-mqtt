@@ -14,7 +14,7 @@ public interface MqttConsumerListener {
 	 * @param topic
 	 * @param msg
 	 */
-	void receiveMessage(int msgId, String topic, String msg);
+	void receiveMessage(int msgId, String topic, byte[] msg);
 	
 
 	/**
@@ -23,5 +23,5 @@ public interface MqttConsumerListener {
 	 * @param topic
 	 * @param msg
 	 */
-	void receiveMessageByAny(int msgId, String topic, String msg);
+	void receiveMessageByAny(int msgId, String topic,  byte[]  msg);
 }
