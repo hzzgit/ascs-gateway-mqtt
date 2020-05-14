@@ -22,12 +22,12 @@ public class HeartbeatServerHandler extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
             if (e.state() == IdleState.WRITER_IDLE) {
-            	log.info("WRITER_IDLE");
+            	log.debug("WRITER_IDLE");
             } else if (e.state() == IdleState.READER_IDLE) {
-            	log.info("READER_IDLE");
+            	log.debug("READER_IDLE");
                 //ctx.channel().close();
             } else if (e.state() == IdleState.ALL_IDLE) {
-            	log.info("ALL_IDLE");
+            	log.debug("ALL_IDLE");
             	//
             	ctx.close();
             	return ;
